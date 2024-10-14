@@ -235,22 +235,23 @@ print(Date().string(format: .dateTime))
 /*
  Another useful thing about enums is that they don't have initializers, so they're great for static constants.
  */
-enum Constant {
-    static let welcomeMessage = NSLocalizedString("Welcome", comment: "Welcome Screen Title")
-
-    // They can even be nested
-    enum Welcome {
-        static let title = NSLocalizedString("Welcome", comment: "Welcome Screen Title")
-    }
-
-    enum Settings {
-        static let title = NSLocalizedString("Settings", comment: "Settings Screen Title")
-        static let license = NSLocalizedString("License", comment: "Open Source License Title")
-        static let privacy = NSLocalizedString("Privacy", comment: "Privacy Policy Title")
-    }
+protocol FeatureDescribable {
+    static var title: String { get }
 }
 
-print(Constant.welcomeMessage)
-print(Constant.Welcome.title)
-print(Constant.Settings.title)
-[Constant.Settings.license, Constant.Settings.privacy].forEach { print("|\t" + $0) }
+enum Constant {
+    enum Feature {
+        enum Welcome: FeatureDescribable {
+            static let title: String = "Welcome"
+        }
+        enum Settings: FeatureDescribable {
+            static let title: String = "Settings"
+
+            enum Section: String, CaseIterable {
+                case license = "Open Source Licenses"
+                case privacy = "Privacy Policy"
+                case support = "Support"
+            }
+        }
+    }
+}
