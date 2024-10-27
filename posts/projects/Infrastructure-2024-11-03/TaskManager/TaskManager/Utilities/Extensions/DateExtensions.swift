@@ -47,6 +47,11 @@ extension Date {
     }
 
     // MARK: - Standardized Input/Output Transformations
+    // MARK: Component Conversions
+    func toDateComponents(format: TMDateFormat) -> DateComponents? {
+        currentCalendar.dateComponents(format.components, from: self)
+    }
+
     // MARK: Parameter Model Conversions
     func toDateParameters() -> DateParameters? {
         let components = currentCalendar.dateComponents(TMDateFormat.date.components, from: self)

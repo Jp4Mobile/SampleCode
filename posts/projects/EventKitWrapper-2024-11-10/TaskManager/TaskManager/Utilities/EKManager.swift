@@ -18,6 +18,8 @@ class EKManager {
         case noDefaultCalendarForReminders
         case noSourceFound
         case calendarNotFound(String)
+        case eventNotFound(String)
+        case reminderNotFound(String)
     }
 
     // MARK: - Properties
@@ -210,10 +212,9 @@ class EKManager {
     }
 
     // MARK: - Retrieves
-    func getEvents() async throws -> [EKEvent] {
+    func getEvents(from startDate: Date = Date()) async throws -> [EKEvent] {
         let calendar = try await getCalendarToUse(for: .event)
 
-        let startDate = Date()
         let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate) ?? startDate
         let predicate = eventStore.predicateForEvents(withStart: startDate,
                                                       end: endDate,
@@ -222,6 +223,21 @@ class EKManager {
         let allEvents = eventStore.events(matching: predicate)
 
         return allEvents
+    }
+
+    func getEvent(id: String) async throws -> EKEvent {
+        if !hasCalendarAccess {
+            try await requestCalendarAccess()
+        }
+        guard hasCalendarAccess else {
+            throw EKManagerError.calendarAccessDenied
+        }
+
+        guard let event = eventStore.event(withIdentifier: id) else {
+            throw EKManagerError.eventNotFound(id)
+        }
+
+        return event
     }
 
     func getReminders() async throws -> [EKReminder] {
@@ -235,6 +251,22 @@ class EKManager {
                 continuation.resume(returning: reminders ?? [])
             }
         }
+    }
+
+    func getReminder(id: String) async throws -> EKReminder {
+        if !hasReminderAccess {
+            try await requestReminderAccess()
+        }
+        guard hasReminderAccess else {
+            throw EKManagerError.reminderAccessDenied
+        }
+
+        guard let calendarItem = eventStore.calendarItem(withIdentifier: id),
+              let reminder = calendarItem as? EKReminder else {
+            throw EKManagerError.reminderNotFound(id)
+        }
+
+        return reminder
     }
 
     // MARK: - Removers
@@ -285,21 +317,23 @@ class EKManager {
 
     // MARK: - Creator
     func create(_ entityType: EKEntityType,
-                model: EventParameters) async throws {
+                model: EventParameters,
+                shouldCommit: Bool = true) async throws {
         let calendar = try await getCalendarToUse(for: entityType)
 
         switch entityType {
         case .event:
-            try createEvent(for: model, on: calendar)
+            try createEvent(for: model, on: calendar, shouldCommit: shouldCommit)
         case .reminder:
-            try createReminder(for: model, on: calendar)
+            try createReminder(for: model, on: calendar, shouldCommit: shouldCommit)
         default:
             throw EKManagerError.unknownEntity
         }
     }
 
     private func createEvent(for model: EventParameters,
-                             on calendar: EKCalendar) throws {
+                             on calendar: EKCalendar,
+                             shouldCommit: Bool = true) throws {
         let event = EKEvent(eventStore: eventStore)
         event.title = model.title
         event.startDate = model.startDate
@@ -307,16 +341,42 @@ class EKManager {
         event.notes = model.notes
         event.calendar = calendar
 
-        try eventStore.save(event, span: .thisEvent, commit: true)
+        try eventStore.save(event, span: .thisEvent, commit: shouldCommit)
     }
 
     private func createReminder(for model: EventParameters,
-                                on calendar: EKCalendar) throws {
+                                on calendar: EKCalendar,
+                                shouldCommit: Bool = true) throws {
         let reminder = EKReminder(eventStore: eventStore)
         reminder.title = model.title
         reminder.dueDateComponents = model.startDate.toComponents(format: model.dateFormat)
         reminder.notes = model.notes
         reminder.calendar = calendar
-        try eventStore.save(reminder, commit: true)
+        try eventStore.save(reminder, commit: shouldCommit)
+    }
+
+    // MARK: - Updaters
+    func update(_ event: EKEvent, shouldBatch: Bool = false) async throws {
+        if !hasCalendarAccess {
+            try await requestCalendarAccess()
+        }
+        guard !hasCalendarAccess else {
+            throw EKManagerError.calendarAccessDenied
+        }
+        try eventStore.save(event, span: .thisEvent)
+
+        guard !shouldBatch else { return }
+
+        try eventStore.commit()
+    }
+
+    func update(_ reminder: EKReminder, shouldBatch: Bool = false) async throws {
+        if !hasReminderAccess {
+            try await requestReminderAccess()
+        }
+        guard !hasReminderAccess else {
+            throw EKManagerError.reminderAccessDenied
+        }
+        try eventStore.save(reminder, commit: !shouldBatch)
     }
 }
