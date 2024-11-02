@@ -141,7 +141,7 @@ struct DateTimeDateTimeParameters: FormattedDateRepresentable, ParameterConverti
         guard startDate < endDate else {
             throw TMError.endDateNotAfterStartDate(startDate, endDate)
         }
-        
+
         return .beginEndDate(startDate, endDate)
     }
 }

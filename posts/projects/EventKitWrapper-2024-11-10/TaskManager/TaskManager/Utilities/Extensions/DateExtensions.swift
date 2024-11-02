@@ -94,11 +94,11 @@ extension Date {
     init?(format: TMDateFormat, _ input: String) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format.string
-        
+
         guard let date = dateFormatter.date(from: input) else {
             return nil
         }
-        
+
         self = date
     }
 
