@@ -8,42 +8,6 @@
 import EventKit
 import Foundation
 
-protocol EKEventStoreMockable {
-    // Requesting Access
-    func requestFullAccessToEvents() async throws -> Bool
-    func requestFullAccessToReminders() async throws -> Bool
-
-    // State
-    func commit() throws
-
-    // Sources
-    var sources: [EKSource] { get }
-
-    // Calendar Access
-    var defaultCalendarForNewEvents: EKCalendar? { get }
-    func defaultCalendarForNewReminders() -> EKCalendar?
-
-    func calendars(for entityType: EKEntityType) -> [EKCalendar]
-    func saveCalendar(_ calendar: EKCalendar, commit: Bool) throws
-    func removeCalendar(_ calendar: EKCalendar, commit: Bool) throws
-
-    // Event Retrieval
-    func predicateForEvents(withStart startDate: Date, end endDate: Date, calendars: [EKCalendar]?) -> NSPredicate
-    func events(matching predicate: NSPredicate) -> [EKEvent]
-    func event(withIdentifier identifier: String) -> EKEvent?
-    func remove(_ event: EKEvent, span: EKSpan, commit: Bool) throws
-    func save(_ event: EKEvent, span: EKSpan, commit: Bool) throws
-
-    // Reminder Retrieval
-    func predicateForReminders(in calendars: [EKCalendar]?) -> NSPredicate
-    @discardableResult func fetchReminders(matching predicate: NSPredicate, completion: @escaping ([EKReminder]?) -> Void) -> Any
-    func calendarItem(withIdentifier identifier: String) -> EKCalendarItem?
-    func remove(_ reminder: EKReminder, commit: Bool) throws
-    func save(_ reminder: EKReminder, commit: Bool) throws
-}
-
-extension EKEventStore: EKEventStoreMockable {}
-
 class EKManager {
     // MARK: - Errors
     enum EKManagerError: Error {
@@ -59,7 +23,7 @@ class EKManager {
     }
 
     // MARK: - Properties
-    let eventStore: EKEventStoreMockable = EKEventStore()
+    let eventStore = EKEventStore()
     private(set) var hasCalendarAccess: Bool = false
     private(set) var hasReminderAccess: Bool = false
 
