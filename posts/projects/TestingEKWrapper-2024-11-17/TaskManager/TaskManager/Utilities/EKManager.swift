@@ -23,7 +23,7 @@ class EKManager {
     }
 
     // MARK: - Properties
-    let eventStore = EKEventStore()
+    var eventStore = EKEventStore()
     private(set) var hasCalendarAccess: Bool = false
     private(set) var hasReminderAccess: Bool = false
 
@@ -181,7 +181,7 @@ class EKManager {
         try await verifyAccess(for: entityType)
 
         let calendar = EKCalendar(for: entityType,
-                                  eventStore: eventStore as! EKEventStore)
+                                  eventStore: eventStore)
         calendar.title = name
         calendar.source = try await getEventSource(for: entityType)
 
@@ -279,7 +279,7 @@ class EKManager {
         }
     }
 
-    // MARK: - Creator
+    // MARK: - Creators
     func create(_ entityType: EKEntityType,
                 model: EventParameters,
                 shouldCommit: Bool = true) async throws {
@@ -298,7 +298,7 @@ class EKManager {
     private func createEvent(for model: EventParameters,
                              on calendar: EKCalendar,
                              shouldCommit: Bool = true) throws {
-        let event = EKEvent(eventStore: eventStore as! EKEventStore)
+        let event = EKEvent(eventStore: eventStore)
         event.title = model.title
         event.startDate = model.startDate
         event.endDate = model.endDate
@@ -311,7 +311,7 @@ class EKManager {
     private func createReminder(for model: EventParameters,
                                 on calendar: EKCalendar,
                                 shouldCommit: Bool = true) throws {
-        let reminder = EKReminder(eventStore: eventStore as! EKEventStore)
+        let reminder = EKReminder(eventStore: eventStore)
         reminder.title = model.title
         reminder.dueDateComponents = model.startDate.toComponents(format: model.dateFormat)
         reminder.notes = model.notes
@@ -336,3 +336,23 @@ class EKManager {
         try eventStore.save(reminder, commit: !shouldBatch)
     }
 }
+
+#if DEBUG
+
+extension EKManager {
+    func reset() {
+        self.eventStore = EKEventStore()
+        self.hasCalendarAccess = false
+        self.hasReminderAccess = false
+    }
+
+    func set(hasCalendarAccess: Bool) {
+        self.hasCalendarAccess = hasCalendarAccess
+    }
+
+    func set(hasReminderAccess: Bool) {
+        self.hasReminderAccess = hasReminderAccess
+    }
+}
+
+#endif
