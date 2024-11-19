@@ -14,7 +14,7 @@ final class EKManagerTests: XCTestCase {
     var sut: EKManager!
 
     override func tearDown() {
-        sut.reset()
+        sut?.reset()
         sut = nil
 
         super.tearDown()
@@ -33,6 +33,7 @@ final class EKManagerTests: XCTestCase {
         sut = EKManager.shared
         sut.eventStore = fakeEventStore
 
+        // Verify that the error was thrown
         do {
             try await sut.requestCalendarAccess()
             XCTFail("Should not have succeeded")
@@ -176,6 +177,30 @@ final class EKManagerTests: XCTestCase {
             _ = try await sut.getEvents()
             XCTFail("Should not succeed")
         } catch {
+            if let ekError = error as? EKManager.EKManagerError,
+               case .calendarAccessDenied = ekError {
+                return
+            } else {
+                XCTFail("Unknown error: \(error)")
+            }
+        }
+    }
+
+    func test_getEvents_whenThrowingError_throwsError() async throws {
+        throw XCTSkip("Unfortunately, though it should throw an error, " +
+                      "faking EventStore doesn't allow us to overload " +
+                      "this method.")
+        let fakeEventStore = FakeEKEventStore()
+        fakeEventStore.errorToThrow = TestError.error
+        sut = EKManager.shared
+        sut.eventStore = fakeEventStore
+        sut.set(hasCalendarAccess: true)
+        
+        do {
+            _ = try await sut.getEvents()
+            XCTFail("Should not succeed")
+        } catch {
+            print("*Jp* \(self)::\(#function)[\(#line)] <\(error)>")
             if let ekError = error as? EKManager.EKManagerError,
                case .calendarAccessDenied = ekError {
                 return
