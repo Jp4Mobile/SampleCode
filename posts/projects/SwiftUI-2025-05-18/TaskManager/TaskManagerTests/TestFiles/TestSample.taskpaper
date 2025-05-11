@@ -1,0 +1,17 @@
+Project:
+	Notes on a project.
+	TaskPaper uses a hierarchical structure to keep track of parents and ownership.
+	ie; all of the below items are within this project.
+	- Item for that project.
+		- Child item with a note.
+			Note about that item.
+	- Tagged Item @tag
+	- Tagged Item where the tag has a payload @tag(payload)
+	Let's illustrate some of the time formats that we've worked so hard on.
+	- Something completed @test @due(2024-11-23) @done(2024-11-23)
+	- Something with a set due date and time @test @due(2024-11-24 10:00)
+	- An appointment @test @due(2024-11-24 10:00-10:30)
+	- A spanning appointment @test @due(2024-11-23 11:00 thru 2024-11-24 10:00)
+
+Other Project:
+	- Item for the other project
