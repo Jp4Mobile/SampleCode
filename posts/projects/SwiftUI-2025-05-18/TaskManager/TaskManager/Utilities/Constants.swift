@@ -45,4 +45,8 @@ extension Constants {
         static let defaultCalendarName = NSLocalizedString("TaskManager",
                                                            comment: "Default calendar name")
     }
+    enum Tag {
+        static let placeholder = NSLocalizedString("Enter Tag",
+                                                   comment: "Tag placeholder")
+    }
 }

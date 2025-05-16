@@ -8,15 +8,38 @@
 import SwiftUI
 
 struct TagView: View {
+    @State private var editMode: EditMode = .inactive
     @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
 
-    let tag: Tag
+    @State var tag: Tag
+    @State var tagPlaceHolder: String
+
+    init(editMode: EditMode = .inactive,
+         tag: Tag) {
+        self.editMode = editMode
+        self.tag = tag
+        self.tagPlaceHolder = tag.toString
+    }
+
     var body: some View {
         Group {
-            if let payload = tag.payload {
-                Text("@\(tag.tag)(**\(payload)**)")
+            if editMode == .active {
+                TextField(Constants.Tag.placeholder,
+                          text: $tagPlaceHolder,
+                          axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .multilineTextAlignment(.center)
+                    .onSubmit {
+                        editMode = .inactive
+                        convertToTag(placeholder: tagPlaceHolder,
+                                     baseTag: tag)
+                    }
             } else {
-                Text("@\(tag.tag)")
+                if let payload = tag.payload {
+                    Text("@\(tag.tag)(**\(payload)**)")
+                } else {
+                    Text("@\(tag.tag)")
+                }
             }
         }
         .font(.caption)
@@ -25,10 +48,33 @@ struct TagView: View {
         .multilineTextAlignment(.trailing)
         .padding(scaledPadding)
         .overlay(
-            Capsule()
-                .stroke(Color.Tag.border,
-                        lineWidth: 1)
+            Group {
+                if editMode == .active {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(style: StrokeStyle(lineWidth: 1,
+                                                   dash: [2]))
+                        .foregroundColor(Color.Tag.border)
+                } else {
+                    Capsule()
+                        .stroke(Color.Tag.border,
+                                lineWidth: 1)
+                }
+            }
         )
+        .onLongPressGesture {
+            editMode = .active
+        }
+    }
+
+    func convertToTag(placeholder: String,
+                      baseTag: Tag) {
+        guard let convertedTag = placeholder.toTag() else {
+            tagPlaceHolder = baseTag.toString
+            return
+        }
+
+        self.tag = convertedTag
+        self.tagPlaceHolder = convertedTag.toString
     }
 }
 

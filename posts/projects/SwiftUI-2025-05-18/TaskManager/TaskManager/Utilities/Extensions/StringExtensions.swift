@@ -140,6 +140,17 @@ extension String {
             return nil
         }
     }
+
+    func toTag() -> Tag? {
+        guard self.contains("@") else { return nil }
+
+        let tags = Substring(self).extractTags()
+
+        // We only want to convert from `String` to `Tag`, when there's one and only one tag in it.
+        guard tags.count == 1 else { return nil }
+
+        return tags.first
+    }
 }
 
 extension Substring {
