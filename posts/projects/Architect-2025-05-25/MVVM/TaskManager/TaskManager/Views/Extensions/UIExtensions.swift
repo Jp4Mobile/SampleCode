@@ -20,3 +20,13 @@ extension Color {
         }
     }
 }
+
+extension Image {
+    struct Tab {
+        struct Icon {
+            static let tasks = Image("list.bullet.circle")
+            static let text = Image("list.bullet.circle.fill")
+            static let settings = Image("gearshape.circle.fill")
+        }
+    }
+}

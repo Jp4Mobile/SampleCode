@@ -111,6 +111,18 @@ struct TMType: Codable, Equatable, FormattedTMType {
     }
 }
 
+extension TMType: Identifiable {
+    var id: String {
+        "[\(tabLevel)]\(type.toString)<\(tags.map{$0.toString}.joined(separator: ","))>"
+    }
+}
+
+extension TMType: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 extension TMType: CustomDebugStringConvertible {
     var debugDescription: String {
         var result = "[\(tabLevel)] `\(type.toString)`"
