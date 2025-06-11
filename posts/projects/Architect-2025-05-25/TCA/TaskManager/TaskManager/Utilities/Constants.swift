@@ -41,6 +41,12 @@ enum Spacing {
 /// Localizable Strings
 extension Constants {
     /// EKManager Elements
+    enum Alert {
+        static let message = NSLocalizedString("Are you sure?",
+                                               comment: "")
+        static let deleteTitle = NSLocalizedString("Delete",
+                                                   comment: "")
+    }
     enum EKManager {
         static let defaultCalendarName = NSLocalizedString("TaskManager",
                                                            comment: "Default calendar name")
@@ -48,5 +54,18 @@ extension Constants {
     enum Tag {
         static let placeholder = NSLocalizedString("Enter Tag",
                                                    comment: "Tag placeholder")
+    }
+    enum Tasks {
+        static let title = NSLocalizedString("Tasks", comment: "Tasks view title")
+    }
+
+    enum AddEditTask {
+        static let addTitle = NSLocalizedString("Add Task", comment: "")
+        static let editTitle = NSLocalizedString("Edit Task", comment: "")
+
+        static let placeholder = NSLocalizedString("Enter Task", comment: "")
+        static let cancelTitle = NSLocalizedString("Cancel", comment: "")
+        static let deleteTitle = NSLocalizedString("Delete", comment: "")
+        static let saveTitle = NSLocalizedString("Save", comment: "")
     }
 }
