@@ -1,6 +1,6 @@
 # Investigating Different Architectures for our TaskManager App
 
-Before we get too deep into the visual design, we're going to look at MVVM, VIPER, and TCA as different ways of organizing your iOS SwiftUI app.
+Before we get too deep into the visual design, we're going to look at MVVM and TCA as different ways of organizing your iOS SwiftUI app.
 
 Unlike our previous sample code sections, this one will have individual directory structures for each of the individual architectures.
 
@@ -42,37 +42,11 @@ These will be our UI/UX layer, as described above. It won't communicate directly
 
 Each view model handles both the data segregation so that each *View* only sees the data that they're supposed to as well as the business logic to ensure that the *Model* can be updated.
 
-## VIPER
+##### Two flavors
 
-[Sample Code](./VIPER/TaskManager/)
+I have both MVVM and MVVM with combine for the MVVM functionality.
 
-### View - Presenter (Router) - Interactor - Entity
-
-`View` ↔️ `Presenter` ↔️ `Interactor` ↔️ `Entity`
-
-As well as this:
-
-`Presenter` ↔️ `Router`
-
-#### View
-
-This is our UI/UX layer, as described above. It communicates through the *Presenter*. This ensures that the view only has the data it needs and the only only interactions are the ones available.
-
-#### Interactor
-
-This layer handles the changes to the *Entity* (known as the model layer in other architectures). Business logic usually goes here.
-
-#### Presenter
-
-This layer handles preparing the data from the *Entity* for the *View* and handles the user interactions that would need to update the entities.
-
-#### Entity
-
-This layer is our data models. And sometimes the service lay to retrieve/update from the end points.
-
-#### Router
-
-This layer handles the the navigation and routing between views.
+[With Combine Sample Code](./MVVM-Combine/TaskManager/)
 
 ## TCA
 
