@@ -16,7 +16,11 @@ struct TagConverter {
     struct State: Equatable {
         var editMode: EditMode = .inactive
         var initialTag: Tag
-        var tag: Tag
+        var tag: Tag {
+            didSet {
+                text = tag.toString
+            }
+        }
         var text = ""
 
         init(tag: Tag) {
@@ -42,57 +46,72 @@ struct TCATagView: View {
     var body: some View {
         Group {
             if store.editMode == .active {
-                TextField(Constants.Tag.placeholder,
-                          text: $store.text,
-                          axis: .vertical)
-                .textFieldStyle(.plain)
-                .multilineTextAlignment(.center)
-                .font(.caption)
-                .textScale(.secondary)
-                .tint(Color.Tag.tint)
-                .padding(scaledPadding)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(style: StrokeStyle(lineWidth: 1,
-                                                   dash: [2]))
-                        .foregroundStyle(Color.Tag.border)
-                )
-                .onSubmit {
-                    defer {
-                        store.editMode = .inactive
-                    }
-
-                    guard let updatedTag = store.text.toTag() else {
-                        print("*Jp* \(self)::\(#function)[\(#line)] unable to convert")
-                        store.text = store.tag.toString
-                        return
-                    }
-                    store.tag = updatedTag
-                    store.text = updatedTag.toString
-                }
+                textFieldTag
             } else {
-                Group {
-                    if let payload = store.tag.payload {
-                        Text("@\(store.tag.tag)**(\(payload))**")
-                    } else {
-                        Text("@\(store.tag.tag)")
-                    }
-                }
-                .multilineTextAlignment(.trailing)
-                .font(.caption)
-                .textScale(.secondary)
-                .tint(Color.Tag.tint)
-                .padding(scaledPadding)
-                .overlay(
-                    Capsule()
-                        .stroke(Color.Tag.border,
-                                lineWidth: 1)
-                )
-                .onLongPressGesture {
-                    store.editMode = .active
-                }
+                textTag
             }
         }
+    }
+}
+
+extension TCATagView {
+    func textTag(tag: Tag) -> Text {
+        guard let payload = tag.payload else {
+            return Text("@\(tag.tag)")
+        }
+
+        return Text("@\(tag.tag)(**\(payload)**)")
+    }
+
+    var textTag: some View {
+        textTag(tag: store.tag)
+            .font(.caption)
+            .textScale(.secondary)
+            .tint(Color.Tag.tint)
+            .multilineTextAlignment(.trailing)
+            .padding(scaledPadding)
+            .overlay(
+                Capsule()
+                    .stroke(Color.Tag.border,
+                            lineWidth: 1)
+            )
+            .onLongPressGesture {
+                store.editMode = .active
+            }
+    }
+
+    var textFieldTag: some View {
+        TextField(Constants.Tag.placeholder,
+                  text: $store.text,
+                  axis: .vertical)
+        .textFieldStyle(.plain)
+        .multilineTextAlignment(.center)
+        .onSubmit {
+            onTextFieldSubmission()
+        }
+        .font(.caption)
+        .textScale(.secondary)
+        .tint(Color.Tag.tint)
+        .padding(scaledPadding)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(style: StrokeStyle(lineWidth: 1,
+                                           dash: [2]))
+                .foregroundColor(Color.Tag.border)
+        )
+    }
+
+    func onTextFieldSubmission() {
+        defer {
+            store.editMode = .inactive
+        }
+
+        guard let updatedTag = store.text.toTag() else {
+            print("*Jp* \(self)::\(#function)[\(#line)] unable to convert")
+            store.text = store.tag.toString
+            return
+        }
+        store.tag = updatedTag
     }
 }
 

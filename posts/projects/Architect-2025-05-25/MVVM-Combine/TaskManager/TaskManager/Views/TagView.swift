@@ -1,5 +1,5 @@
 //
-//  UpdatedTagView.swift
+//  TagView.swift
 //  TaskManager
 //
 //  Created by Jp LaFond on 6/16/25.
@@ -11,7 +11,12 @@ import SwiftUI
 struct TagView: View {
     struct TagState: Equatable {
         var editMode: EditMode
-        var tag: Tag
+        var tag: Tag {
+            // Ensure that the textTag is always appropriately set.
+            didSet {
+                self.textTag = tag.toString
+            }
+        }
         var textTag: String
 
         init(_ tag: Tag, editMode: EditMode = .inactive) {
@@ -37,29 +42,7 @@ struct TagView: View {
                 return
             }
             update(\.tag, to: convertedTag)
-            update(\.textTag, to: convertedTag.toString)
             update(\.editMode, to: .inactive)
-        }
-
-        // MARK: - StateBindingViewModel Conformance
-        override func stateWillChangeValue<Value>(_ keyPath: PartialKeyPath<TagView.TagState>, newValue: Value) -> Bool where Value : Equatable {
-            switch (keyPath, newValue) {
-            case let (\.textTag, newValue as String):
-                guard let convertedTag = newValue.toTag() else {
-                    update(\.textTag, to: state.tag.toString)
-                    return false
-                }
-                update(\.tag, to: convertedTag)
-                update(\.textTag, to: convertedTag.toString)
-                return true
-
-            default:
-                return false
-            }
-        }
-
-        override func onStateChange(_ keyPath: PartialKeyPath<TagView.TagState>) {
-            update(\.editMode, to: .active)
         }
     }
 

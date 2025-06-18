@@ -23,7 +23,7 @@ struct ContentView: View {
                 TextView(viewModel: TextView.ViewModel(from: TMType.Mock.Projects.projectWithTasks))
                     .tabItem {
                         Label("Edit",
-                              systemImage: "list.bullet.circle.fill")
+                              systemImage: "pencil.circle.fill")
                     }
                 SettingsView()
                     .tabItem {
