@@ -5,6 +5,7 @@
 //  Created by Jp LaFond on 10/13/24.
 //
 
+import ComposableArchitecture
 import SwiftUI
 import EventKit
 
@@ -15,23 +16,13 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .underline()
             Spacer()
-            TabView {
-                Text("Tasks")                    .tabItem {
-                        Label("Tasks",
-                              systemImage: "list.bullet.circle")
-                    }
-                Text("Edit")                    .tabItem {
-                        Label("Edit",
-                              systemImage: "list.bullet.circle.fill")
-                    }
-                Text("Settings")                    .tabItem {
-                        Label("Settings",
-                              systemImage: "gearshape.circle.fill")
-                    }
-            }
+            AppView(store: Store(
+                initialState: AppFeature.State()) {
+                    AppFeature()
+                }
+            )
         }
     }
-
 }
 
 #Preview {

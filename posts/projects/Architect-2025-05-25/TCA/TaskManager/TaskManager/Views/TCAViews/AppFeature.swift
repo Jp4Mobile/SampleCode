@@ -52,7 +52,7 @@ struct AppView: View {
             Text("Text Goes Here")
                 .tabItem {
                     Label("Edit",
-                          systemImage: "list.bullet.circle.fill")
+                          systemImage: "pencil.circle.fill")
                 }
 
             Text("Settings Go Here")
