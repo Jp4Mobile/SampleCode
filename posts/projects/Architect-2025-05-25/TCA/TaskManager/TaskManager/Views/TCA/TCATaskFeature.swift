@@ -2,7 +2,7 @@
 //  TCATaskFeature.swift
 //  TaskManager
 //
-//  Created by Jp LaFond on 6/9/25.
+//  Created by Jp LaFond on 6/23/25.
 //
 
 import ComposableArchitecture
@@ -12,7 +12,12 @@ import SwiftUI
 // MARK: - Model
 struct TCATask: Equatable, Identifiable {
     let id: UUID
-    var text: String
+    var task: TMType
+
+    func updatedCopy(_ newTask: TMType) -> TCATask {
+        TCATask(id: self.id,
+                task: newTask)
+    }
 }
 
 // MARK: - Reducer
@@ -47,10 +52,10 @@ struct TCATaskFeature {
             switch action {
             case .addButtonTapped:
                 state.destination = .addTask(
-                    AddEditTCATaskFeature.State(
+                    TCAAddEditTaskFeature.State(
                         mode: .add,
                         task: TCATask(id: self.uuid(),
-                                         text: "")
+                                      task: .init(type: .text("")))
                     )
                 )
 
@@ -99,7 +104,7 @@ struct TCATaskFeature {
             case let .editTask(task):
 
                 state.destination = .editTask(
-                    AddEditTCATaskFeature.State(
+                    TCAAddEditTaskFeature.State(
                         mode: .edit,
                         task: task
                     )
@@ -113,7 +118,7 @@ struct TCATaskFeature {
                 action: \.destination) {
             Destination.body
         }
-        .ifLet(\.$alert, action: \.alert)
+                .ifLet(\.$alert, action: \.alert)
     }
 }
 
@@ -122,8 +127,8 @@ extension TCATaskFeature {
     // MARK: Reducer
     @Reducer
     enum Destination {
-        case addTask(AddEditTCATaskFeature)
-        case editTask(AddEditTCATaskFeature)
+        case addTask(TCAAddEditTaskFeature)
+        case editTask(TCAAddEditTaskFeature)
     }
 }
 // MARK: State
@@ -139,12 +144,13 @@ struct TCATaskFeatureView: View {
                 ForEach (store.tasks) { task in
 
                     HStack {
-                        Text(task.text)
+                        Text(task.task.type.toString)
+                            .bodyMode()
                         Spacer()
                         Button {
                             store.send(.editTask(task))
                         } label: {
-                            Image(systemName: "pencil.circle")
+                            Image.Task.Icon.edit
                                 .tint(Color.green.opacity(0.8))
                         }
                         .buttonStyle(.borderless)
@@ -152,7 +158,7 @@ struct TCATaskFeatureView: View {
 
                 }
             }
-            .navigationTitle(Constants.Tasks.title)
+            .navigationTitle(Constants.TaskView.title)
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -169,9 +175,8 @@ struct TCATaskFeatureView: View {
         ) { addTaskStore in
 
             NavigationStack {
-                AddTCATaskFeatureView(store: addTaskStore)
+                TCAAddEditTaskView(store: addTaskStore)
             }
-
         }
         .sheet(
             item: $store.scope(state: \.destination?.editTask,
@@ -179,7 +184,7 @@ struct TCATaskFeatureView: View {
         ) { editTaskStore in
 
             NavigationStack {
-                AddTCATaskFeatureView(store: editTaskStore)
+                TCAAddEditTaskView(store: editTaskStore)
             }
 
         }
@@ -193,15 +198,15 @@ struct TCATaskFeatureView: View {
             initialState: TCATaskFeature.State(
                 tasks: [
                     TCATask(id: UUID(),
-                            text: "Project:"),
+                            task: TMType.Mock.TopLevel.project),
                     TCATask(id: UUID(),
-                            text: "- Task"),
+                            task: TMType.Mock.TopLevel.task),
                     TCATask(id: UUID(),
-                            text: "Text")
+                            task: TMType.Mock.TopLevel.text)
                 ]
-        )
-    ) {
-        TCATaskFeature()
-    }
+            )
+        ) {
+            TCATaskFeature()
+        }
     )
 }

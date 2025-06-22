@@ -2,19 +2,19 @@
 //  TagView.swift
 //  TaskManager
 //
-//  Created by Jp LaFond on 6/16/25.
+//  Created by Jp LaFond on 5/9/25.
 //
 
-import Foundation
 import SwiftUI
 
+// Here we convert the view from the previous code into a ViewModel with Combine.
 struct TagView: View {
+    // StateBindingViewModel leverages a specific equatable state model.
     struct TagState: Equatable {
         var editMode: EditMode
         var tag: Tag {
-            // Ensure that the textTag is always appropriately set.
             didSet {
-                self.textTag = tag.toString
+                textTag = tag.toString
             }
         }
         var textTag: String
@@ -26,8 +26,10 @@ struct TagView: View {
         }
     }
 
+    // The new version of the view model leverages the `StateBindingViewModel`.
     final class ViewModel: StateBindingViewModel<TagState> {
-        init(_ tag: Tag, editMode: EditMode = .inactive) {
+        init(_ tag: Tag,
+             editMode: EditMode = .inactive) {
             super.init(initialState: .init(tag, editMode: editMode))
         }
 
@@ -46,12 +48,10 @@ struct TagView: View {
         }
     }
 
-    // MARK: - Properties
+    @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
     @StateObject
     var viewModel: ViewModel
-    @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
 
-    // MARK: - View Content
     var body: some View {
         Group {
             if viewModel.isEditing {
@@ -128,13 +128,9 @@ extension Constants {
 #Preview {
     ScrollView {
         TagView(viewModel: .init(Constants.MockTag.test))
-        Spacer(minLength: 16)
-        TagView(viewModel: .init(Constants.MockTag.dueDate))
-        Spacer(minLength: 16)
-        TagView(viewModel: .init(Constants.MockTag.dueDateTime))
-        Spacer(minLength: 16)
-        TagView(viewModel: .init(Constants.MockTag.dueDateTimeRange))
-        Spacer(minLength: 16)
-        TagView(viewModel: .init(Constants.MockTag.dueDayRange))
+        TagView(viewModel: TagView.ViewModel(Constants.MockTag.dueDate))
+        TagView(viewModel: TagView.ViewModel(Constants.MockTag.dueDateTime))
+        TagView(viewModel: TagView.ViewModel(Constants.MockTag.dueDateTimeRange))
+        TagView(viewModel: TagView.ViewModel(Constants.MockTag.dueDayRange))
     }
 }

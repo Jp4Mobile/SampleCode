@@ -15,12 +15,12 @@ struct ContentView: View {
                 .underline()
             Spacer()
             TabView {
-                TaskView(viewModel: TaskView.ViewModel(items: [TMType.Mock.TopLevel.project, TMType.Mock.TopLevel.task, TMType.Mock.TopLevel.text]))
+                TaskMasterAndDetailView(viewModel: .init())
                     .tabItem {
                         Label("Tasks",
                               systemImage: "list.bullet.circle")
                     }
-                TextView(viewModel: TextView.ViewModel(from: TMType.Mock.Projects.projectWithTasks))
+                TextView(viewModel: TextView.ViewModel(from: TMType(type: .text(""))))
                     .tabItem {
                         Label("Edit",
                               systemImage: "pencil.circle.fill")

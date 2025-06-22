@@ -50,10 +50,25 @@ extension Constants {
                                                    comment: "Tag placeholder")
     }
 
-    enum Text {
-        static let title = NSLocalizedString("Tasks",
-                                             comment: "Tasks Title")
-        static let saveButtonTitle = NSLocalizedString("Save",
-                                                       comment: "save button title")
+    enum Task {
+        static let placeholder = NSLocalizedString("Enter Project/Task/Text",
+                                                   comment: "Task placeholder")
+    }
+    enum TaskView {
+        static let title = NSLocalizedString("Tasks", comment: "Navigation Title")
+    }
+
+    enum DetailView {
+        static let addTitle = NSLocalizedString("Add Task", comment: "Add Mode Title")
+        static let editTitle = NSLocalizedString("Edit Task", comment: "Edit Mode Title")
+
+        static let cancelTitle = NSLocalizedString("Cancel", comment: "Cancel button title")
+        static let deleteTitle = NSLocalizedString("Delete", comment: "Delete button title")
+        static let saveTitle = NSLocalizedString("Save", comment: "Save button title")
+    }
+
+    enum TextView {
+        static let title = NSLocalizedString("Text Tasks", comment: "Text Title")
+        static let saveTitle = NSLocalizedString("Save", comment: "Save button title")
     }
 }
