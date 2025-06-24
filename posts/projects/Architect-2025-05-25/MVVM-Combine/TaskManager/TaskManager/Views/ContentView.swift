@@ -15,12 +15,12 @@ struct ContentView: View {
                 .underline()
             Spacer()
             TabView {
-                TaskView(viewModel: TaskView.ViewModel(items: [TMType.Mock.TopLevel.project, TMType.Mock.TopLevel.task, TMType.Mock.TopLevel.text]))
+                TaskMasterAndDetailView(viewModel: .init(initialState: .init()))
                     .tabItem {
                         Label("Tasks",
                               systemImage: "list.bullet.circle")
                     }
-                TextView(viewModel: TextView.ViewModel(from: TMType.Mock.Projects.projectWithTasks))
+                TextView(viewModel: .init(initialState: .init(type: .init(type: .text("")))))
                     .tabItem {
                         Label("Edit",
                               systemImage: "pencil.circle.fill")
@@ -30,17 +30,6 @@ struct ContentView: View {
                         Label("Settings",
                               systemImage: "gearshape.circle.fill")
                     }
-                ScrollView {
-                    TagView(viewModel: .init(Constants.MockTag.test))
-                    TagView(viewModel: .init(Constants.MockTag.dueDate))
-                    TagView(viewModel: .init(Constants.MockTag.dueDateTime))
-                    TagView(viewModel: .init(Constants.MockTag.dueDateTimeRange))
-                    TagView(viewModel: .init(Constants.MockTag.dueDayRange))
-                }
-                .tabItem {
-                    Label("TagView",
-                          systemImage: "questionmark.circle.fill")
-                }
             }
         }
     }

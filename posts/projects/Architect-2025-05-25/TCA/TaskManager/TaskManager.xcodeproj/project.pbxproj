@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E8EDE3862DE6F9CA0042DD9C /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E8EDE3852DE6F9CA0042DD9C /* ComposableArchitecture */; };
+		E81AF5C02E09743C00F25969 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E81AF5BF2E09743C00F25969 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8EDE3862DE6F9CA0042DD9C /* ComposableArchitecture in Frameworks */,
+				E81AF5C02E09743C00F25969 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +130,7 @@
 			);
 			name = TaskManager;
 			packageProductDependencies = (
-				E8EDE3852DE6F9CA0042DD9C /* ComposableArchitecture */,
+				E81AF5BF2E09743C00F25969 /* ComposableArchitecture */,
 			);
 			productName = TaskManager;
 			productReference = E86852412CBC101300E34E5A /* TaskManager.app */;
@@ -215,7 +215,7 @@
 			mainGroup = E86852382CBC101300E34E5A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				E8EDE3842DE6F9CA0042DD9C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				E81AF5BE2E09743C00F25969 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E86852422CBC101300E34E5A /* Products */;
@@ -617,7 +617,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E8EDE3842DE6F9CA0042DD9C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		E81AF5BE2E09743C00F25969 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
@@ -628,9 +628,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E8EDE3852DE6F9CA0042DD9C /* ComposableArchitecture */ = {
+		E81AF5BF2E09743C00F25969 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E8EDE3842DE6F9CA0042DD9C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = E81AF5BE2E09743C00F25969 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
 /* End XCSwiftPackageProductDependency section */

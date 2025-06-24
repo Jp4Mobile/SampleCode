@@ -77,7 +77,7 @@ struct TextView: View {
                 if let errorMessage = viewModel.state.errorMessage {
                     Text(errorMessage)
                         .font(.subheadline)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Color.Alert.alert)
                 }
                 TextEditor(text: viewModel.binding(\.text))
                     .padding(Spacing.default)

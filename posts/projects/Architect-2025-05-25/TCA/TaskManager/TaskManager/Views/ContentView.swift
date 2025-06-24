@@ -7,7 +7,6 @@
 
 import ComposableArchitecture
 import SwiftUI
-import EventKit
 
 struct ContentView: View {
     var body: some View {
@@ -16,13 +15,16 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .underline()
             Spacer()
-            AppView(store: Store(
-                initialState: AppFeature.State()) {
-                    AppFeature()
-                }
+            TCAAppView(store:
+                        Store(
+                            initialState: TCAAppFeature.State()
+                        ) {
+                            TCAAppFeature()
+                        }
             )
         }
     }
+
 }
 
 #Preview {

@@ -8,19 +8,17 @@ In each case, we'll set up our basic app with the same standard behavior:
 
 * Three tabs:
   * List View
-    * Collapsible list of projects
-    * Collapsible list of the tasks or notes within each project
-    * Collapsible list of notes within each task
-    * Clicking on a task should bring up a detail view where the TaskManager task/note children are converted to a reminder/calendar event that can be exported to Apple Reminders/Calendar.
+    * Add/Edit/Remove items into the projects/tasks/text list.
+    * List of projects/tasks/text
+    * Clicking on a task should bring up a detail view where the TaskManager task.
         
-    Each item can be rearranged up and down the hierarchy to attach them to a new owner. If they were collapsed, all of their children come along with them.
   * Text View
   
-    This is a textual version of the whole Task Manager list. Editing this will enable changes to the List View and vice versa.
+    This is a textual version of the whole Task Manager list. Editing this will convert to our appropriate task types. (For the moment, the list view and the text view are separate and editing one does not affect the other.)
 
   * Settings View
   
-    This is a list of the various setting options each setting option have various UI elements: sliders, toggles, text fields and each should persist the data, as well as affecting the state of the app.
+    For the moment, this is a placeholder view. In the future this will be a list of the various setting options, which each setting option having the appropriate UI element for that: sliders for numeric range values, toggles for boolean values, text fields for data entry, and each should persist the data that will affect the state of the app.
 
 ## MVVM
 

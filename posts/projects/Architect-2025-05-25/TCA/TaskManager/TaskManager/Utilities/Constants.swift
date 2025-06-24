@@ -41,12 +41,6 @@ enum Spacing {
 /// Localizable Strings
 extension Constants {
     /// EKManager Elements
-    enum Alert {
-        static let message = NSLocalizedString("Are you sure?",
-                                               comment: "")
-        static let deleteTitle = NSLocalizedString("Delete",
-                                                   comment: "")
-    }
     enum EKManager {
         static let defaultCalendarName = NSLocalizedString("TaskManager",
                                                            comment: "Default calendar name")
@@ -55,17 +49,34 @@ extension Constants {
         static let placeholder = NSLocalizedString("Enter Tag",
                                                    comment: "Tag placeholder")
     }
-    enum Tasks {
-        static let title = NSLocalizedString("Tasks", comment: "Tasks view title")
+
+    enum Task {
+        static let placeholder = NSLocalizedString("Enter Project/Task/Text",
+                                                   comment: "Task placeholder")
+    }
+    enum Alert {
+        static let message = NSLocalizedString("Are you sure?",
+                                               comment: "")
+        static let deleteTitle = NSLocalizedString("Delete",
+                                                   comment: "")
+    }
+    enum TaskView {
+        static let title = NSLocalizedString("Tasks", comment: "Navigation Title")
     }
 
-    enum AddEditTask {
-        static let addTitle = NSLocalizedString("Add Task", comment: "")
-        static let editTitle = NSLocalizedString("Edit Task", comment: "")
+    enum DetailView {
+        static let addTitle = NSLocalizedString("Add Task", comment: "Add Mode Title")
+        static let editTitle = NSLocalizedString("Edit Task", comment: "Edit Mode Title")
 
-        static let placeholder = NSLocalizedString("Enter Task", comment: "")
-        static let cancelTitle = NSLocalizedString("Cancel", comment: "")
-        static let deleteTitle = NSLocalizedString("Delete", comment: "")
-        static let saveTitle = NSLocalizedString("Save", comment: "")
+        static let placeholder = NSLocalizedString("Enter Task", comment: "Textfield placeholder")
+
+        static let cancelTitle = NSLocalizedString("Cancel", comment: "Cancel button title")
+        static let deleteTitle = NSLocalizedString("Delete", comment: "Delete button title")
+        static let saveTitle = NSLocalizedString("Save", comment: "Save button title")
+    }
+
+    enum TextView {
+        static let title = NSLocalizedString("Text Tasks", comment: "Text Title")
+        static let saveTitle = NSLocalizedString("Save", comment: "Save button title")
     }
 }

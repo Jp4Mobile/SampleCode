@@ -10,8 +10,19 @@ import SwiftUI
 struct TextView: View {
     @Observable
     class ViewModel {
-        private var type: TMType
+        private var type: TMType {
+            didSet {
+                text = type.toString
+            }
+        }
         var text: String
+        var errorMessage: String? {
+            didSet {
+                guard let errorMessage else { return }
+
+                text = type.toString
+            }
+        }
 
         init(from type: TMType) {
             self.type = type
@@ -19,11 +30,25 @@ struct TextView: View {
         }
 
         func updatedText(text: String) {
-            // TODO: Present an error
-            guard let type = text.toTMType() else { return }
+            let types = TMType.parse(string: text)
+            guard !text.isEmpty,
+                  !types.isEmpty else {
+                errorMessage = "Unable to convert <\(text)>"
+                return
+            }
+            let updatedTypes = TMType.normalize(types)
+            guard let firstType = updatedTypes.first else {
+                errorMessage = "Unable to convert <\(text)>"
+                return
+            }
 
-            self.type = type
-            self.text = type.toString
+            if updatedTypes.count > 1 {
+                errorMessage = "Only the first converted type model is saved. You may need to change indentation to keep them under the proper project."
+            } else {
+                errorMessage = nil
+            }
+
+            type = firstType
         }
     }
 
@@ -34,11 +59,31 @@ struct TextView: View {
     }
 
     var body: some View {
-        TextEditor(text: $viewModel.text)
-            .padding(Spacing.default)
-            .onSubmit {
-                viewModel.updatedText(text: viewModel.text)
+        NavigationStack {
+            VStack {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.subheadline)
+                        .foregroundStyle(.red)
+                }
+                TextEditor(text: $viewModel.text)
+                    .padding(Spacing.default)
+                    .onSubmit {
+                        viewModel.updatedText(text: viewModel.text)
+                    }
             }
+            .navigationTitle(Constants.TextView.title)
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        viewModel.updatedText(text: viewModel.text)
+                    } label: {
+                        Text(Constants.TextView.saveTitle)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        }
     }
 }
 

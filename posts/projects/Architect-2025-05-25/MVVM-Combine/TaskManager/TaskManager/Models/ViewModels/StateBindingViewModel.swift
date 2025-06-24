@@ -2,7 +2,7 @@
 //  ViewModel.swift
 //  TaskManager
 //
-//  Created by Jp LaFond on 6/13/25.
+//  Created by Jp LaFond on 6/22/25.
 //  Based on the work of Eduardo Sanches Bocato from: https://bocato.medium.com/improving-mvvm-forms-in-swiftui-14b032065095
 //
 

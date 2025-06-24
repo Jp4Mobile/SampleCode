@@ -2,45 +2,59 @@
 //  TCATagView.swift
 //  TaskManager
 //
-//  Created by Jp LaFond on 6/6/25.
+//  Created by Jp LaFond on 6/23/25.
 //
 
 import ComposableArchitecture
 import SwiftUI
 
+/*
+ TCA Features are broken down into two parts:
+ * The Reducer which will have three parts:
+   - State (the properties that can be read or changed)
+   - Actions (the actions that will change the state)
+   - Body (the reducer itself that will take current state, and current action and result in the updated state or next action)
+ * The View with a bindable store and the visible UI/UX.
+ */
+
 // MARK: - Reducer
 @Reducer
-struct TagConverter {
+struct TagSimpleBindingConverter {
     // MARK: State
     @ObservableState
     struct State: Equatable {
-        var editMode: EditMode = .inactive
+        var editMode: EditMode
         var initialTag: Tag
         var tag: Tag {
             didSet {
                 text = tag.toString
             }
         }
-        var text = ""
+        var text: String
 
         init(tag: Tag) {
             self.initialTag = tag
             self.tag = tag
             self.text = tag.toString
+            self.editMode = .inactive
         }
     }
 
+    // MARK: Action
     enum Action: BindableAction, Sendable {
         case binding(BindingAction<State>)
     }
 
+    // MARK: Body (Reducer)
     var body: some Reducer<State, Action> {
         BindingReducer()
     }
 }
 
-struct TCATagView: View {
-    @Bindable var store: StoreOf<TagConverter>
+// MARK: - View
+struct TCASimpleBindingTagView: View {
+    @Bindable
+    var store: StoreOf<TagSimpleBindingConverter>
     @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
 
     var body: some View {
@@ -54,7 +68,8 @@ struct TCATagView: View {
     }
 }
 
-extension TCATagView {
+// MARK: SubViews
+extension TCASimpleBindingTagView {
     func textTag(tag: Tag) -> Text {
         guard let payload = tag.payload else {
             return Text("@\(tag.tag)")
@@ -73,7 +88,7 @@ extension TCATagView {
             .overlay(
                 Capsule()
                     .stroke(Color.Tag.border,
-                            lineWidth: 1)
+                           lineWidth: 1)
             )
             .onLongPressGesture {
                 store.editMode = .active
@@ -96,18 +111,21 @@ extension TCATagView {
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(style: StrokeStyle(lineWidth: 1,
-                                           dash: [2]))
-                .foregroundColor(Color.Tag.border)
+                                          dash: [2]))
+                .foregroundStyle(Color.Tag.border)
         )
     }
+}
 
+// MARK: Helper Functions
+extension TCASimpleBindingTagView {
     func onTextFieldSubmission() {
         defer {
             store.editMode = .inactive
         }
 
         guard let updatedTag = store.text.toTag() else {
-            print("*Jp* \(self)::\(#function)[\(#line)] unable to convert")
+            // TODO: Present an error
             store.text = store.tag.toString
             return
         }
@@ -117,49 +135,49 @@ extension TCATagView {
 
 #Preview {
     ScrollView {
-        TCATagView(
+        TCASimpleBindingTagView(
             store: Store(
                 initialState:
-                    TagConverter.State(tag: Tag("test")
+                    TagSimpleBindingConverter.State(tag: Tag("test")
                                       )
             ) {
-                TagConverter()
+                TagSimpleBindingConverter()
             }
         )
-        TCATagView(
+        TCASimpleBindingTagView(
             store: Store(
                 initialState:
-                    TagConverter.State(tag: Tag(.due, payload: "2025-06-07")
+                    TagSimpleBindingConverter.State(tag: Tag(.due, payload: "2025-06-07")
                                       )
             ) {
-                TagConverter()
+                TagSimpleBindingConverter()
             }
         )
-        TCATagView(
+        TCASimpleBindingTagView(
             store: Store(
                 initialState:
-                    TagConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00")
+                    TagSimpleBindingConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00")
                                       )
             ) {
-                TagConverter()
+                TagSimpleBindingConverter()
             }
         )
-        TCATagView(
+        TCASimpleBindingTagView(
             store: Store(
                 initialState:
-                    TagConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00-11:00")
+                    TagSimpleBindingConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00-11:00")
                                       )
             ) {
-                TagConverter()
+                TagSimpleBindingConverter()
             }
         )
-        TCATagView(
+        TCASimpleBindingTagView(
             store: Store(
                 initialState:
-                    TagConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00 thru 2025-06-09 13:00")
+                    TagSimpleBindingConverter.State(tag: Tag(.due, payload: "2025-06-07 10:00 thru 2025-06-09 13:00")
                                       )
             ) {
-                TagConverter()
+                TagSimpleBindingConverter()
             }
         )
     }

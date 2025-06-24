@@ -7,9 +7,11 @@
 
 import SwiftUI
 
+// Here we convert the view from the previous code into a ViewModel.
 struct TagView: View {
     @Observable
     class ViewModel {
+        // Properties
         var editMode: EditMode
         private(set) var tag: Tag {
             didSet {
@@ -17,6 +19,10 @@ struct TagView: View {
             }
         }
         var textTag: String
+
+        var isEditing: Bool {
+            editMode == .active
+        }
 
         init(_ tag: Tag, editMode: EditMode = .inactive) {
             self.editMode = editMode
@@ -34,14 +40,12 @@ struct TagView: View {
         }
     }
 
-    @State private var editMode: EditMode = .inactive
     @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
-
     @State var viewModel: ViewModel
 
     var body: some View {
         Group {
-            if viewModel.editMode == .active {
+            if viewModel.isEditing {
                 textFieldTag
             } else {
                 textTag
