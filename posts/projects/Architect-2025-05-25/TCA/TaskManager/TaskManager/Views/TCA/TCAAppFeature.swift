@@ -48,28 +48,34 @@ struct TCAAppView: View {
     let store: StoreOf<TCAAppFeature>
 
     var body: some View {
-        TabView {
-            TCATaskFeatureView(
-                store: store.scope(state: \.taskState,
-                                   action: \.taskAction)
-            )
-            .tabItem {
-                Label("Tasks",
-                systemImage: "list.bullet.circle")
-            }
-            TCATextView(
-                store: store.scope(state: \.textState,
-                                   action: \.textAction)
-            )
-            .tabItem {
-                Label("Edit",
-                      systemImage: "pencil.circle.fill")
-            }
-            SettingsView()
+        VStack {
+            Text("TCA Version")
+                .font(.largeTitle)
+                .underline()
+            Spacer()
+            TabView {
+                TCATaskFeatureView(
+                    store: store.scope(state: \.taskState,
+                                       action: \.taskAction)
+                )
                 .tabItem {
-                    Label("Settings",
-                          systemImage: "gearshape.circle.fill")
+                    Label("Tasks",
+                          systemImage: "list.bullet.circle")
                 }
+                TCATextView(
+                    store: store.scope(state: \.textState,
+                                       action: \.textAction)
+                )
+                .tabItem {
+                    Label("Edit",
+                          systemImage: "pencil.circle.fill")
+                }
+                SettingsView()
+                    .tabItem {
+                        Label("Settings",
+                              systemImage: "gearshape.circle.fill")
+                    }
+            }
         }
     }
 }
