@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>We need full access to create/read/remove calendars and events, so that you can access your events properly through the app.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>We need to create/read/remove calendars and reminders so that you can access your reminders through the app.</string>
+</dict>
+</plist>
