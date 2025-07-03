@@ -11,28 +11,36 @@ import SwiftUI
 struct TagView: View {
     @Observable
     class ViewModel {
-        // Properties
+        // MARK: Properties
+        /// The edit state of the view
         var editMode: EditMode
+        /// The actual tag
         private(set) var tag: Tag {
             didSet {
-                textTag = tag.toString
+                text = tag.toString
             }
         }
-        var textTag: String
+        /// The entered text to be converted into the tag
+        var text: String
 
+        // MARK: Computed Properties
         var isEditing: Bool {
             editMode == .active
         }
 
+        // MARK: Initializer
         init(_ tag: Tag, editMode: EditMode = .inactive) {
             self.editMode = editMode
             self.tag = tag
-            self.textTag = tag.toString
+            self.text = tag.toString
         }
 
+        // MARK: Helper Function
+        /// Converts into a tag, if valid
+        /// - parameter from: the text to attempt to convert
         func convertTagIfValid(from string: String) {
             guard let convertedTag = string.toTag() else {
-                self.textTag = tag.toString
+                self.text = tag.toString
                 return
             }
             self.tag = convertedTag
@@ -44,18 +52,16 @@ struct TagView: View {
     @State var viewModel: ViewModel
 
     var body: some View {
-        Group {
-            if viewModel.isEditing {
-                textFieldTag
-            } else {
-                textTag
-            }
+        if viewModel.isEditing {
+            tagEditView
+        } else {
+            tagView
         }
     }
 }
 
 extension TagView {
-    func textTag(tag: Tag) -> Text {
+    func tagView(tag: Tag) -> Text {
         guard let payload = tag.payload else {
             return Text("@\(tag.tag)")
         }
@@ -63,8 +69,8 @@ extension TagView {
         return Text("@\(tag.tag)(**\(payload)**)")
     }
 
-    var textTag: some View {
-        textTag(tag: viewModel.tag)
+    var tagView: some View {
+        tagView(tag: viewModel.tag)
             .font(.caption)
             .textScale(.secondary)
             .tint(Color.Tag.tint)
@@ -80,14 +86,14 @@ extension TagView {
             }
     }
 
-    var textFieldTag: some View {
+    var tagEditView: some View {
         TextField(Constants.Tag.placeholder,
-                  text: $viewModel.textTag,
+                  text: $viewModel.text,
                   axis: .vertical)
         .textFieldStyle(.plain)
         .multilineTextAlignment(.center)
         .onSubmit {
-            viewModel.convertTagIfValid(from: viewModel.textTag)
+            viewModel.convertTagIfValid(from: viewModel.text)
         }
         .font(.caption)
         .textScale(.secondary)

@@ -1,5 +1,5 @@
 //
-//  TCATaskFeature.swift
+//  TCATagFeature (First Pass).swift
 //  TaskManager
 //
 //  Created by Jp LaFond on 6/23/25.
@@ -21,7 +21,7 @@ import SwiftUI
 
 // MARK: - Reducer
 @Reducer
-struct TagConverter {
+struct TagConverterFirstPass {
     // MARK: State
     @ObservableState
     struct State: Equatable {
@@ -96,9 +96,9 @@ struct TagConverter {
 }
 
 // MARK: - View
-struct TCATagView: View {
+struct TCATagViewFirstPass: View {
     @Bindable
-    var store: StoreOf<TagConverter>
+    var store: StoreOf<TagConverterFirstPass>
     @ScaledMetric(relativeTo: .caption) private var scaledPadding = Spacing.default
 
     var body: some View {
@@ -108,28 +108,26 @@ struct TCATagView: View {
                     .font(.caption)
                     .foregroundStyle(.red)
             }
-            Group {
-                if store.isEditing {
-                    textFieldTag
-                } else {
-                    textTag
-                }
+            if store.isEditing {
+                editTagView
+            } else {
+                tagView
             }
         }
     }
 }
 
 // MARK: SubViews
-extension TCATagView {
-    func textTag(tag: Tag) -> Text {
+extension TCATagViewFirstPass {
+    func tagView(tag: Tag) -> Text {
         guard let payload = tag.payload else {
             return Text("@\(tag.tag)")
         }
         return Text("@\(tag.tag)(**\(payload)**)")
     }
 
-    var textTag: some View {
-        textTag(tag: store.tag)
+    var tagView: some View {
+        tagView(tag: store.tag)
             .captionMode()
             .tint(Color.Tag.tint)
             .overlay(
@@ -142,7 +140,7 @@ extension TCATagView {
             }
     }
 
-    var textFieldTag: some View {
+    var editTagView: some View {
         TextField(Constants.Tag.placeholder,
                   text: $store.text.sending(\.entered),
                   axis: .vertical)
@@ -162,57 +160,57 @@ extension TCATagView {
 
 #Preview {
     ScrollView {
-        TCATagView(
+        TCATagViewFirstPass(
             store: Store (
                 initialState:
-                    TagConverter.State(tag: Tag("test")
+                    TagConverterFirstPass.State(tag: Tag("test")
                                       )
             ) {
-                TagConverter()
+                TagConverterFirstPass()
             }
             )
 
-        TCATagView(
+        TCATagViewFirstPass(
             store: Store (
                 initialState:
-                    TagConverter.State(tag: Tag(.due,
+                    TagConverterFirstPass.State(tag: Tag(.due,
                                                 payload: "2025-06-07")
                                       )
             ) {
-                TagConverter()
+                TagConverterFirstPass()
             }
         )
 
-        TCATagView(
+        TCATagViewFirstPass(
             store: Store (
                 initialState:
-                    TagConverter.State(tag: Tag(.due,
+                    TagConverterFirstPass.State(tag: Tag(.due,
                                                 payload: "2025-06-07 10:00")
                     )
             ) {
-                TagConverter()
+                TagConverterFirstPass()
             }
         )
 
-        TCATagView(
+        TCATagViewFirstPass(
             store: Store (
                 initialState:
-                    TagConverter.State(tag: Tag(.due,
+                    TagConverterFirstPass.State(tag: Tag(.due,
                                                 payload: "2025-06-07 10:00-11:00")
                     )
             ) {
-                TagConverter()
+                TagConverterFirstPass()
             }
         )
 
-        TCATagView(
+        TCATagViewFirstPass(
             store: Store (
                 initialState:
-                    TagConverter.State(tag: Tag(.due,
+                    TagConverterFirstPass.State(tag: Tag(.due,
                                                 payload: "2025-06-07 10:00 thru 2025-06-09 13:00")
                     )
             ) {
-                TagConverter()
+                TagConverterFirstPass()
             }
         )
     }
